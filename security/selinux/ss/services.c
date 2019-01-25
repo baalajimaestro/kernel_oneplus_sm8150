@@ -89,6 +89,8 @@ void selinux_ss_init(struct selinux_ss **ss)
 	*ss = &selinux_ss;
 }
 
+int ss_initialized;
+
 /* Forward declaration. */
 static int context_struct_to_string(struct policydb *policydb,
 				    struct context *context,
