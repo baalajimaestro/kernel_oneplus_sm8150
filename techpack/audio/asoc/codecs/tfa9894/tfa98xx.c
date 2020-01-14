@@ -2985,8 +2985,7 @@ static int tfa98xx_mute(struct snd_soc_dai *dai, int mute, int stream)
 
 		cancel_delayed_work_sync(&tfa98xx->init_work);
 
-
-		pr_err("%s: tfa98xx->dsp_fw_state = %d\n", __func__, tfa98xx->dsp_fw_state);
+		pr_debug("%s: tfa98xx->dsp_fw_state = %d\n", __func__, tfa98xx->dsp_fw_state);
 
 		if (tfa98xx->dsp_fw_state != TFA98XX_DSP_FW_OK)
 			return 0;
