@@ -8848,7 +8848,11 @@ perf_event_parse_addr_filter(struct perf_event *event, char *fstr,
 				/* look up the path and grab its inode */
 				ret = kern_path(filename, LOOKUP_FOLLOW,
 						&filter->path);
+				if (ret)
 					goto fail;
+
+				kfree(filename);
+				filename = NULL;
 
 				ret = -EINVAL;
 				if (!filter->path.dentry ||
