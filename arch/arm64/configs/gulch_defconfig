@@ -5940,6 +5940,7 @@ CONFIG_CRYPTO_AUTHENC=y
 # CONFIG_CRYPTO_TEST is not set
 CONFIG_CRYPTO_SIMD=y
 CONFIG_WIREGUARD=y
+CONFIG_WAKE_GESTURES=y
 
 #
 # Authenticated Encryption with Associated Data
