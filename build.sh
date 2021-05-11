@@ -1,5 +1,7 @@
-git clone https://github.com/arter97/arm64-gcc.git -b master --depth=1 gcc
-git clone https://github.com/arter97/arm32-gcc.git -b master --depth=1 gcc32
+#! /bin/bash
+
+git clone https://github.com/arter97/arm64-gcc.git --quiet -b master --depth=1 gcc
+git clone https://github.com/arter97/arm32-gcc.git --quiet -b master --depth=1 gcc32
 git clone https://github.com/baalajimaestro/AnyKernel3.git --depth=1 anykernel3
 export CROSS_COMPILE="$(pwd)/gcc/bin/aarch64-elf-"
 export CROSS_COMPILE_ARM32="$(pwd)/gcc32/bin/arm-eabi-"
