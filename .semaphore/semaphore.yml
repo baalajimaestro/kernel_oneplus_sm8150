@@ -17,7 +17,8 @@ blocks:
       - name: Build
         commands:
           - sudo chown -R baalajimaestro:baalajimaestro ~/.ssh
-          - sudo chmod -R 600 ~/.ssh
+          - chmod -R 600 ~/.ssh
+          - echo "Host *" > ~/.ssh/config && echo " StrictHostKeyChecking no" >> ~/.ssh/config
           - checkout
           - git clone https://github.com/arter97/arm64-gcc.git -b master --depth=1 gcc
           - git clone https://github.com/arter97/arm32-gcc.git -b master --depth=1 gcc32
