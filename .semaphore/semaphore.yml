@@ -8,7 +8,7 @@ agent:
 
   containers:
     - name: main
-      image: 'fedora:latest'
+      image: 'baalajimaestro/kernel_build:latest'
 
 blocks:
   - name: "Fetch and Prepare"
@@ -17,21 +17,6 @@ blocks:
       - name: Fetch and Prepare
         commands:
           - checkout
-          - dnf -y update && dnf -y install gcc-aarch64-linux-gnu \
-                                            git-core \
-                                            libtool \
-                                            binutils \
-                                            shtool \
-                                            which \
-                                            hostname \
-                                            ccache \
-                                            bc \
-                                            gnupg \
-                                            zip \
-                                            curl \
-                                            make \
-                                            m4 \
-                                            diffutils
           - git clone https://github.com/arter97/arm64-gcc.git -b master --depth=1 gcc
           - git clone https://github.com/arter97/arm32-gcc.git -b master --depth=1 gcc32
           - git clone https://github.com/baalajimaestro/AnyKernel3.git --depth=1 anykernel3
