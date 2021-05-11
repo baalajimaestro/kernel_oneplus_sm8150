@@ -1,0 +1,9 @@
+git clone https://github.com/arter97/arm64-gcc.git -b master --depth=1 gcc
+git clone https://github.com/arter97/arm32-gcc.git -b master --depth=1 gcc32
+git clone https://github.com/baalajimaestro/AnyKernel3.git --depth=1 anykernel3
+export CROSS_COMPILE="$(PWD)/gcc/bin/aarch64-elf-"
+export CROSS_COMPILE_ARM32="$(PWD)/gcc32/bin/arm-eabi-"
+export ARCH=arm64
+export SUBARCH=arm64
+make -j$(nproc) sm8150_defconfig O=out
+make -j$(nproc) O=out
