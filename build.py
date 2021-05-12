@@ -7,7 +7,7 @@ import os
 from aiogram import Bot, Dispatcher, types
 from aiogram.utils import exceptions, executor
 
-API_TOKEN = os.environ.get("BOT_API_KEY")
+API_TOKEN = os.environ.get("TELEGRAM_TOKEN")
 
 logging.basicConfig(level=logging.INFO)
 log = logging.getLogger('broadcast')
