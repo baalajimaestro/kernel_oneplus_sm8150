@@ -26,7 +26,9 @@ async def runner():
         from git import Repo
         message = "`Retarded CI`\n"
         message += "`Spinning Build for commit:` [" + os.environ.get("SEMAPHORE_GIT_SHA")[:6] + "](https://github.com/baalajimaestro/kernel_oneplus_sm8150/commit/" + os.environ.get("SEMAPHORE_GIT_SHA") +")\n"
-        message += "`Job ID: `" + os.environ.get("SEMAPHORE_JOB_ID") + "\n"
+        job_id =  os.environ.get("SEMAPHORE_JOB_ID")
+        job_id = job_id.replace("-", '\\-')
+        message += "`Job ID: `" + job_id + "\n"
         message += "`Runner: " + os.environ.get("SEMAPHORE_AGENT_MACHINE_TYPE") + " With " + str(os.cpu_count()) + " Threads`\n"
         message += "`Downloading Dependenices....`"
         message_track = await send_message(518221376, message)
@@ -50,14 +52,14 @@ async def runner():
 
         process = subprocess.run(list_defconfig)
         if process.returncode != 0:
-            exit(127)
+            raise RuntimeError
 
         message = "`Started Make....`"
         await edit_message(518221376, message, message_track)
 
         process = subprocess.run(list_make)
         if process.returncode != 0:
-            exit(127)
+            raise RuntimeError
 
     except:
         print("Our Build Failed, but your traceback should help you!")
