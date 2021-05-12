@@ -19,4 +19,6 @@ blocks:
           - echo "Host *" > ~/.ssh/config && echo " StrictHostKeyChecking no" >> ~/.ssh/config
           - chmod 600 ~/.ssh/config
           - checkout
-          - bash build.sh
+          - export LD_LIBRARY_PATH="/usr/local/lib:$LD_LIBRARY_PATH"
+          - pip3 install --user GitPython aiogram
+          - python3 build.py
