@@ -40,9 +40,10 @@ async def runner():
     sys.path.append("/home/baalajimaestro/gcc32/bin")
     defconfig = 'make -j$(nproc) O=out ARCH=arm64 SUBARCH=arm64 CROSS_COMPILE="aarch64-elf-" CROSS_COMPILE_ARM32="arm-eabi-" sm8150_defconfig'
     make = 'make -j$(nproc) O=out ARCH=arm64 SUBARCH=arm64 CROSS_COMPILE="aarch64-elf-" CROSS_COMPILE_ARM32="arm-eabi-"'
-    
+    from sys import executable
+
     process = await asyncio.create_subprocess_exec(
-        defconfig.strip(),
+        defconfig,
         stdout=asyncio.subprocess.PIPE,
         stderr=asyncio.subprocess.PIPE,
     )
@@ -52,7 +53,7 @@ async def runner():
     await asyncio.sleep(10)
 
     process = await asyncio.create_subprocess_exec(
-        defconfig.strip(),
+        command,
         stdout=asyncio.subprocess.PIPE,
         stderr=asyncio.subprocess.PIPE,
     )
