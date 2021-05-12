@@ -1,6 +1,7 @@
 import asyncio
 import logging
 import os
+import subprocess
 from aiogram import Bot, Dispatcher, types
 from aiogram.utils import exceptions, executor
 
@@ -41,27 +42,14 @@ async def runner():
         
         message = "`Started Make....`"
         print("Retarded CI: Strarting Build!")
-        process = await asyncio.create_subprocess_shell(
-            defconfig,
-            stdout=asyncio.subprocess.PIPE,
-            stderr=asyncio.subprocess.PIPE,
-        )
-        stdout, stderr = await process.communicate()
-        result = str(stdout.decode().strip()) + str(stderr.decode().strip())
         
-        print(result)
-        
-        await asyncio.sleep(10)
-
-        process = await asyncio.create_subprocess_shell(
-            make,
-            stdout=asyncio.subprocess.PIPE,
-            stderr=asyncio.subprocess.PIPE,
+        subprocess.check_call(
+            defconfig.strip()
         )
 
-        stdout, stderr = await process.communicate()
-        result = str(stdout.decode().strip()) + str(stderr.decode().strip())
-        print(result)
+        subprocess.check_call(
+            make.strip()
+        )
 
     except:
         print("Our Build, but your traceback should help you!")
