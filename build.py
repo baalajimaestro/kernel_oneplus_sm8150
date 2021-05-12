@@ -69,51 +69,51 @@ async def runner():
         message += (
             "`Runner: "
             + os.environ.get("SEMAPHORE_AGENT_MACHINE_TYPE")
-            + " With "
+            + " with "
             + str(os.cpu_count())
-            + " Threads`\n"
+            + " threads`\n"
         )
         message += "`Downloading Dependenices....`"
         message_track = await send_message(518221376, message)
 
         print("Retarded CI: Getting GCC Cross Compilers")
-        gcc = Repo.clone_from(
-            "https://github.com/arter97/arm64-gcc",
-            "/home/baalajimaestro/gcc",
-            branch="master",
-        )
-        gcc32 = Repo.clone_from(
-            "https://github.com/arter97/arm32-gcc",
-            "/home/baalajimaestro/gcc32",
-            branch="master",
-        )
-        anykernel3 = Repo.clone_from(
-            "https://github.com/baalajimaestro/AnyKernel3",
-            "/home/baalajimaestro/AnyKernel3",
-            branch="master",
-        )
+        # gcc = Repo.clone_from(
+        #     "https://github.com/arter97/arm64-gcc",
+        #     "/home/baalajimaestro/gcc",
+        #     branch="master",
+        # )
+        # gcc32 = Repo.clone_from(
+        #     "https://github.com/arter97/arm32-gcc",
+        #     "/home/baalajimaestro/gcc32",
+        #     branch="master",
+        # )
+        # anykernel3 = Repo.clone_from(
+        #     "https://github.com/baalajimaestro/AnyKernel3",
+        #     "/home/baalajimaestro/AnyKernel3",
+        #     branch="master",
+        # )
         print("Retarded CI: Downloaded Necessary Dependencies")
         message = "`Downloaded Dependenices....`"
         message_track = await edit_message(518221376, message, message_track)
 
-        defconfig = (
-            "make -j"
-            + str(os.cpu_count())
-            + ' O=out ARCH=arm64 SUBARCH=arm64 CROSS_COMPILE="aarch64-elf-" CROSS_COMPILE_ARM32="arm-eabi-" sm8150_defconfig'
-        )
-        make = (
-            "make -j"
-            + str(os.cpu_count())
-            + ' O=out ARCH=arm64 SUBARCH=arm64 CROSS_COMPILE="aarch64-elf-" CROSS_COMPILE_ARM32="arm-eabi-"'
-        )
+        defconfig = ["make",
+            "-j",
+            str(os.cpu_count()),
+            ' O=out',
+            'ARCH=arm64',
+            'SUBARCH=arm64',
+            'CROSS_COMPILE="aarch64-elf-"',
+            'CROSS_COMPILE_ARM32="arm-eabi-"',
+            'CC=ccache', 
+            'CC+="aarch64-elf-gcc"',
+            'sm8150_defconfig']
 
-        list_defconfig = defconfig.split(" ")
-        list_make = make.split(" ")
+        make = defconfig[:-1]
 
         message = "`Started Make....`"
         print("Retarded CI: Starting Build!")
 
-        return_code = execute(list_defconfig)
+        return_code = execute(defconfig)
         if return_code != 0:
             import requests
 
@@ -136,7 +136,7 @@ async def runner():
         message = "`Started Make....`"
         message_track = await edit_message(518221376, message, message_track)
 
-        return_code = execute(list_make)
+        return_code = execute(make)
         if return_code != 0:
             import requests
 
@@ -163,8 +163,9 @@ async def runner():
     except:
         print("Our Build Failed, but your traceback should help you!")
         import traceback
-
         traceback.print_exc()
+        execute(["cache", "delete", "kernel-ccache"])
+        execute(["cache", "store", "kernel-ccache", "~/.ccache"])
         await send_message(518221376, "Build Failed\!")
         exit(127)
 
