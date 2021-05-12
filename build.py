@@ -40,16 +40,19 @@ async def runner():
         defconfig = 'make -j$(nproc) O=out ARCH=arm64 SUBARCH=arm64 CROSS_COMPILE="aarch64-elf-" CROSS_COMPILE_ARM32="arm-eabi-" sm8150_defconfig'
         make = 'make -j$(nproc) O=out ARCH=arm64 SUBARCH=arm64 CROSS_COMPILE="aarch64-elf-" CROSS_COMPILE_ARM32="arm-eabi-"'
         
+        list_defconfig = defconfig.split(" ")
+        list_make = make.split(" ")
+        
         message = "`Started Make....`"
         print("Retarded CI: Strarting Build!")
-        
-        subprocess.check_call(
-            defconfig.strip()
-        )
 
-        subprocess.check_call(
-            make.strip()
-        )
+        process = subprocess.run(list_defconfig)
+        if process.returncode != 0:
+            exit(127)
+
+        process = subprocess.run(list_make)
+        if process.returncode != 0:
+            exit(127)
 
     except:
         print("Our Build, but your traceback should help you!")
