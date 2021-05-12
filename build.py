@@ -71,7 +71,7 @@ async def runner():
                 log = file.readlines()
             str1 = ""
             str1.join(log)
-            nekobin_key = requests.post("https://nekobin.com/api/documents", json={"content": str1}).content.key
+            nekobin_key = requests.post("https://nekobin.com/api/documents", json={"content": str1}).json()["result"]["key"]
             await edit_message(518221376, "[Build Log](https://nekobin.com/" + nekobin_key + ")", message_track)
             raise RuntimeError
 
@@ -86,7 +86,7 @@ async def runner():
                 log = file.readlines()
             str1 = ""
             str1.join(log)
-            nekobin_key = requests.post("https://nekobin.com/api/documents", json={"content": str1}).content.key
+            nekobin_key = requests.post("https://nekobin.com/api/documents", json={"content": str1}).json()["result"]["key"]
             await edit_message(518221376, "[Build Log](https://nekobin.com/" + nekobin_key + ")", message_track)
             raise RuntimeError
 
