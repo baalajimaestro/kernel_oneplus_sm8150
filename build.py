@@ -16,9 +16,9 @@ async def send_message(user_id: int, text: str):
     message = await bot.send_message(user_id, text, disable_notification=False, disable_web_page_preview=True, parse_mode=types.ParseMode.MARKDOWN_V2)
     return message
 
-async def edit_message(user_id: int, text: str, message: str,  disable_web_page_preview=True, parse_mode=types.ParseMode.MARKDOWN_V2):
+async def edit_message(user_id: int, text: str, message: str):
     old_text =  message.md_text
-    await message.edit_text(old_text + '\n' + text)
+    await message.edit_text(old_text + '\n' + text, disable_web_page_preview=True, parse_mode=types.ParseMode.MARKDOWN_V2)
 
 def execute(cmd):
     popen = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, universal_newlines=True)
