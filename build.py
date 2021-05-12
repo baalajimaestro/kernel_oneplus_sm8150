@@ -13,7 +13,7 @@ bot = Bot(token=API_TOKEN, parse_mode=types.ParseMode.MARKDOWN_V2)
 dp = Dispatcher(bot)
 
 async def send_message(user_id: int, text: str):
-    message = await bot.send_message(user_id, text, disable_notification=False, parse_mode=types.ParseMode.MARKDOWN_V2)
+    message = await bot.send_message(user_id, text, disable_notification=False, disable_web_page_preview=True, parse_mode=types.ParseMode.MARKDOWN_V2)
     return message
 
 async def edit_message(user_id: int, text: str, message: str, parse_mode=types.ParseMode.MARKDOWN_V2):
@@ -26,6 +26,8 @@ async def runner():
         from git import Repo
         message = "`Retarded CI`\n"
         message += "`Spinning Build for commit:` [" + os.environ.get("SEMAPHORE_GIT_SHA")[:6] + "](https://github.com/baalajimaestro/kernel_oneplus_sm8150/commit/" + os.environ.get("SEMAPHORE_GIT_SHA") +")\n"
+        message += "`Job ID: `" + os.environ.get("SEMAPHORE_JOB_ID") + "\n"
+        message += "`Runner: " + os.environ.get("SEMAPHORE_AGENT_MACHINE_TYPE") + " With " + str(os.cpu_count()) + " Threads`\n"
         message += "`Downloading Dependenices....`"
         message_track = await send_message(518221376, message)
 
@@ -49,6 +51,9 @@ async def runner():
         process = subprocess.run(list_defconfig)
         if process.returncode != 0:
             exit(127)
+
+        message = "`Started Make....`"
+        await edit_message(518221376, message, message_track)
 
         process = subprocess.run(list_make)
         if process.returncode != 0:
