@@ -23,13 +23,15 @@ async def edit_message(user_id: int, text: str, message: str):
 def execute(cmd):
     popen = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
     for stdout_line in iter(popen.stdout.readline, ""):
-        print(stdout_line) 
+        print(stdout_line, end = '')
+        with open("build.log", 'a') as file:
+            file.write(stdout_line)
     popen.stdout.close()
     return_code = popen.wait()
     if return_code:
-        return return_code, popen.stdout
+        return return_code
     else:
-        return 0, None
+        return 0
 
 async def runner():
     try:
@@ -61,19 +63,30 @@ async def runner():
         message = "`Started Make....`"
         print("Retarded CI: Strarting Build!")
 
-        return_code, log = execute(list_defconfig)
+        return_code = execute(list_defconfig)
         if return_code != 0:
             import requests
-            nekobin_key = requests.post("https://nekobin.com/api/documents", json={"content":log[-200:]}).content.key
+            log = []
+            with open("build.log", "r") as file:
+                log = file.readlines()
+            str1 = ""
+            str1.join(log)
+            nekobin_key = requests.post("https://nekobin.com/api/documents", json={"content": str1}).content.key
             await edit_message(518221376, "[Build Log](https://nekobin.com/" + nekobin_key + ")", message_track)
             raise RuntimeError
 
         message = "`Started Make....`"
         await edit_message(518221376, message, message_track)
 
-        return_code, log = execute(list_make)
+        return_code= execute(list_make)
         if return_code != 0:
-            nekobin_key = requests.post("https://nekobin.com/api/documents", json={"content":log[-200:]}).content.key
+            import requests
+            log = []
+            with open("build.log", "r") as file:
+                log = file.readlines()
+            str1 = ""
+            str1.join(log)
+            nekobin_key = requests.post("https://nekobin.com/api/documents", json={"content": str1}).content.key
             await edit_message(518221376, "[Build Log](https://nekobin.com/" + nekobin_key + ")", message_track)
             raise RuntimeError
 
