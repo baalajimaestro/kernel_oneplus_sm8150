@@ -20,7 +20,7 @@ blocks:
           - checkout
           - export LD_LIBRARY_PATH="/usr/local/lib:$LD_LIBRARY_PATH"
           - export PATH="/home/baalajimaestro/gcc/bin:/home/baalajimaestro/gcc32/bin:$PATH"
-          - pip3 install --user GitPython aiogram
+          - pip3 install --user GitPython aiogram requests
           - python3 build.py
       secrets:
         - name: api-keys

@@ -16,9 +16,19 @@ async def send_message(user_id: int, text: str):
     message = await bot.send_message(user_id, text, disable_notification=False, disable_web_page_preview=True, parse_mode=types.ParseMode.MARKDOWN_V2)
     return message
 
-async def edit_message(user_id: int, text: str, message: str, parse_mode=types.ParseMode.MARKDOWN_V2):
+async def edit_message(user_id: int, text: str, message: str,  disable_web_page_preview=True, parse_mode=types.ParseMode.MARKDOWN_V2):
     old_text =  message.md_text
     await message.edit_text(old_text + '\n' + text)
+
+
+def execute(cmd):
+    popen = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, universal_newlines=True)
+    for stdout_line in iter(popen.stdout.readline, ""):
+        yield stdout_line 
+    popen.stdout.close()
+    return_code = popen.wait()
+    if return_code:
+        return return_code, popen.stdout
 
 async def runner():
     try:
@@ -50,15 +60,20 @@ async def runner():
         message = "`Started Make....`"
         print("Retarded CI: Strarting Build!")
 
-        process = subprocess.run(list_defconfig)
-        if process.returncode != 0:
+        return_code, log = execute(list_defconfig)
+        if return_code != 0:
+            import requests
+            nekobin_key = requests.post("https://nekobin.com/api/documents", json={"content":log[-200:]}).content.key
+            await edit_message(518221376, "[Build Log](https://nekobin.com/" + nekobin_key + ")", message_track)
             raise RuntimeError
 
         message = "`Started Make....`"
         await edit_message(518221376, message, message_track)
 
-        process = subprocess.run(list_make)
-        if process.returncode != 0:
+        return_code, log = execute(list_make)
+        if return_code != 0:
+            nekobin_key = requests.post("https://nekobin.com/api/documents", json={"content":log[-200:]}).content.key
+            await edit_message(518221376, "[Build Log](https://nekobin.com/" + nekobin_key + ")", message_track)
             raise RuntimeError
 
     except:
@@ -66,6 +81,7 @@ async def runner():
         import traceback
         traceback.print_exc()
         await send_message(518221376, "Build Failed\!")
+        await bot.log_out()
         exit(127)
 
 if __name__ == '__main__':
