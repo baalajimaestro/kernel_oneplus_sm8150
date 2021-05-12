@@ -37,8 +37,8 @@ async def runner():
         message = "`Downloaded Dependenices....`"
         await edit_message(518221376, message, message_track)
 
-        defconfig = 'make -j$(nproc) O=out ARCH=arm64 SUBARCH=arm64 CROSS_COMPILE="aarch64-elf-" CROSS_COMPILE_ARM32="arm-eabi-" sm8150_defconfig'
-        make = 'make -j$(nproc) O=out ARCH=arm64 SUBARCH=arm64 CROSS_COMPILE="aarch64-elf-" CROSS_COMPILE_ARM32="arm-eabi-"'
+        defconfig = 'make -j' + str(os.cpu_count()) + ' O=out ARCH=arm64 SUBARCH=arm64 CROSS_COMPILE="aarch64-elf-" CROSS_COMPILE_ARM32="arm-eabi-" sm8150_defconfig'
+        make = 'make -j' + str(os.cpu_count()) + ' O=out ARCH=arm64 SUBARCH=arm64 CROSS_COMPILE="aarch64-elf-" CROSS_COMPILE_ARM32="arm-eabi-"'
         
         list_defconfig = defconfig.split(" ")
         list_make = make.split(" ")
