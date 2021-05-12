@@ -21,11 +21,13 @@ async def edit_message(user_id: int, text: str, message: str):
     await message.edit_text(old_text + '\n' + text, disable_web_page_preview=True, parse_mode=types.ParseMode.MARKDOWN_V2)
 
 def execute(cmd):
-    popen = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, universal_newlines=True)
-    for stdout_line in iter(popen.stdout.splitlines()):
-        print(stdout_line)
-    if popen.returncode != 0:
-        return popen.returncode, popen.stdout
+    popen = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+    for stdout_line in iter(popen.stdout.readline, ""):
+        print(stdout_line) 
+    popen.stdout.close()
+    return_code = popen.wait()
+    if return_code:
+        return return_code, popen.stdout
     else:
         return 0, None
 
