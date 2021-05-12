@@ -43,7 +43,7 @@ async def runner():
         
         message = "`Started Make....`"
 
-        process = await asyncio.create_subprocess_exec(
+        process = await asyncio.create_subprocess_shell(
             defconfig,
             stdout=asyncio.subprocess.PIPE,
             stderr=asyncio.subprocess.PIPE,
@@ -55,7 +55,7 @@ async def runner():
         
         await asyncio.sleep(10)
 
-        process = await asyncio.create_subprocess_exec(
+        process = await asyncio.create_subprocess_shell(
             command,
             stdout=asyncio.subprocess.PIPE,
             stderr=asyncio.subprocess.PIPE,
@@ -66,7 +66,7 @@ async def runner():
         print(result)
 
     except:
-        await send_message(518221376, "Build Failed!")
+        await send_message(518221376, "Build Failed\!")
         exit(127)
 
 if __name__ == '__main__':
