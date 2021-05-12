@@ -95,7 +95,6 @@ async def runner():
         import traceback
         traceback.print_exc()
         await send_message(518221376, "Build Failed\!")
-        await bot.log_out()
         exit(127)
 
 if __name__ == '__main__':
