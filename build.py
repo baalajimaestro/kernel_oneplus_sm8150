@@ -24,43 +24,50 @@ async def edit_message(user_id: int, text: str, message: str, parse_mode=types.P
     await message.edit_text(old_text + '\n' + text)
 
 async def runner():
-    from git import Repo
-    import sys
-    import os
-    message = "`Retarded CI`\n"
-    message += "`Spinning Build for commit:` [" + os.environ.get("SEMAPHORE_GIT_SHA")[:6] + "](https://github.com/baalajimaestro/kernel_oneplus_sm8150/commit/" + os.environ.get("SEMAPHORE_GIT_SHA") +")\n"
-    message += "`Downloading Dependenices....`"
-    message_track = await send_message("518221376", message)
-    gcc = Repo.clone_from("https://github.com/arter97/arm64-gcc", "/home/baalajimaestro/gcc", branch='master')
-    gcc32 = Repo.clone_from("https://github.com/arter97/arm32-gcc", "/home/baalajimaestro/gcc32", branch='master')
-    anykernel3 = Repo.clone_from("https://github.com/baalajimaestro/AnyKernel3", "/home/baalajimaestro/AnyKernel3", branch='master')
-    message = "`Downloaded Dependenices....`"
-    await edit_message("518221376", message, message_track)
-    sys.path.append("/home/baalajimaestro/gcc/bin")
-    sys.path.append("/home/baalajimaestro/gcc32/bin")
-    defconfig = 'make -j$(nproc) O=out ARCH=arm64 SUBARCH=arm64 CROSS_COMPILE="aarch64-elf-" CROSS_COMPILE_ARM32="arm-eabi-" sm8150_defconfig'
-    make = 'make -j$(nproc) O=out ARCH=arm64 SUBARCH=arm64 CROSS_COMPILE="aarch64-elf-" CROSS_COMPILE_ARM32="arm-eabi-"'
-    from sys import executable
+    try:
+        from git import Repo
+        message = "`Retarded CI`\n"
+        message += "`Spinning Build for commit:` [" + os.environ.get("SEMAPHORE_GIT_SHA")[:6] + "](https://github.com/baalajimaestro/kernel_oneplus_sm8150/commit/" + os.environ.get("SEMAPHORE_GIT_SHA") +")\n"
+        message += "`Downloading Dependenices....`"
+        message_track = await send_message(518221376, message)
 
-    process = await asyncio.create_subprocess_exec(
-        defconfig,
-        stdout=asyncio.subprocess.PIPE,
-        stderr=asyncio.subprocess.PIPE,
-    )
-    stdout, stderr = await process.communicate()
-    result = str(stdout.decode().strip()) + str(stderr.decode().strip())
-    print(result)
-    await asyncio.sleep(10)
+        gcc = Repo.clone_from("https://github.com/arter97/arm64-gcc", "/home/baalajimaestro/gcc", branch='master')
+        gcc32 = Repo.clone_from("https://github.com/arter97/arm32-gcc", "/home/baalajimaestro/gcc32", branch='master')
+        anykernel3 = Repo.clone_from("https://github.com/baalajimaestro/AnyKernel3", "/home/baalajimaestro/AnyKernel3", branch='master')
+        
+        message = "`Downloaded Dependenices....`"
+        await edit_message(518221376, message, message_track)
 
-    process = await asyncio.create_subprocess_exec(
-        command,
-        stdout=asyncio.subprocess.PIPE,
-        stderr=asyncio.subprocess.PIPE,
-    )
+        defconfig = 'make -j$(nproc) O=out ARCH=arm64 SUBARCH=arm64 CROSS_COMPILE="aarch64-elf-" CROSS_COMPILE_ARM32="arm-eabi-" sm8150_defconfig'
+        make = 'make -j$(nproc) O=out ARCH=arm64 SUBARCH=arm64 CROSS_COMPILE="aarch64-elf-" CROSS_COMPILE_ARM32="arm-eabi-"'
+        
+        message = "`Started Make....`"
 
-    stdout, stderr = await process.communicate()
-    result = str(stdout.decode().strip()) + str(stderr.decode().strip())
-    print(result)
+        process = await asyncio.create_subprocess_exec(
+            defconfig,
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE,
+        )
+        stdout, stderr = await process.communicate()
+        result = str(stdout.decode().strip()) + str(stderr.decode().strip())
+        
+        print(result)
+        
+        await asyncio.sleep(10)
+
+        process = await asyncio.create_subprocess_exec(
+            command,
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE,
+        )
+
+        stdout, stderr = await process.communicate()
+        result = str(stdout.decode().strip()) + str(stderr.decode().strip())
+        print(result)
+
+    except:
+        await send_message(518221376, "Build Failed!")
+        exit(127)
 
 if __name__ == '__main__':
     executor.start(dp, runner())
