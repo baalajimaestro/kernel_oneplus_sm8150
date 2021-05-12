@@ -42,7 +42,7 @@ async def runner():
         
         list_defconfig = defconfig.split(" ")
         list_make = make.split(" ")
-        
+
         message = "`Started Make....`"
         print("Retarded CI: Strarting Build!")
 
@@ -55,7 +55,7 @@ async def runner():
             exit(127)
 
     except:
-        print("Our Build, but your traceback should help you!")
+        print("Our Build Failed, but your traceback should help you!")
         import traceback
         traceback.print_exc()
         await send_message(518221376, "Build Failed\!")
