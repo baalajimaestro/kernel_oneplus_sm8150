@@ -20,15 +20,14 @@ async def edit_message(user_id: int, text: str, message: str,  disable_web_page_
     old_text =  message.md_text
     await message.edit_text(old_text + '\n' + text)
 
-
 def execute(cmd):
     popen = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, universal_newlines=True)
-    for stdout_line in iter(popen.stdout.readline, ""):
-        yield stdout_line 
-    popen.stdout.close()
-    return_code = popen.wait()
-    if return_code:
-        return return_code, popen.stdout
+    for stdout_line in iter(popen.stdout.splitlines()):
+        print(stdout_line)
+    if popen.returncode != 0:
+        return popen.returncode, popen.stdout
+    else:
+        return 0, None
 
 async def runner():
     try:
