@@ -1,6 +1,3 @@
-from asyncio import create_subprocess_exec as asyncrunapp
-from asyncio.subprocess import PIPE as asyncPIPE
-
 import asyncio
 import logging
 import os
@@ -9,8 +6,7 @@ from aiogram.utils import exceptions, executor
 
 API_TOKEN = os.environ.get("TELEGRAM_TOKEN")
 
-logging.basicConfig(level=logging.INFO)
-log = logging.getLogger('broadcast')
+logging.basicConfig(level=logging.ERROR)
 
 bot = Bot(token=API_TOKEN, parse_mode=types.ParseMode.MARKDOWN_V2)
 dp = Dispatcher(bot)
@@ -66,6 +62,8 @@ async def runner():
         print(result)
 
     except:
+        import traceback
+        traceback.print_exc()
         await send_message(518221376, "Build Failed\!")
         exit(127)
 
