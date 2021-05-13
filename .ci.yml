@@ -27,6 +27,9 @@ blocks:
           - ccache -M 9G && ccache -s
           - export LD_LIBRARY_PATH="/usr/local/lib:$LD_LIBRARY_PATH"
           - export PATH="/home/baalajimaestro/gcc/bin:/home/baalajimaestro/gcc32/bin:$PATH"
+          - export IS_KERNEL_STANDALONE=y
+          - export KBUILD_BUILD_USER=baalajimaestro
+          - export KBUILD_BUILD_HOST=maestro-buildbot
           - pip3 install --user GitPython aiogram requests
           - checkout
 
