@@ -39,6 +39,10 @@ blocks:
           - python3 build.py
 
       epilogue:
+        on_pass:
+          commands:
+            - bash publish.sh
+            
         always:
           commands:
             - ccache -s
