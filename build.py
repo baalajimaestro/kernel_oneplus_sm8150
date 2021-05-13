@@ -65,7 +65,8 @@ async def runner():
         )
         job_id = os.environ.get("SEMAPHORE_JOB_ID")
         job_id = job_id.replace("-", "\\-")
-        message += "`Job ID:` `" + job_id + "`\n"
+        message += "[Job Link](https://baalajimaestro.semaphoreci.com/jobs/" + job_id + ")\n"
+        message += "[Raw Full Log](https://baalajimaestro.semaphoreci.com/jobs/" + job_id + "/plain_logs.txt)\n"
         message += (
             "`Runner: "
             + os.environ.get("SEMAPHORE_AGENT_MACHINE_TYPE")
