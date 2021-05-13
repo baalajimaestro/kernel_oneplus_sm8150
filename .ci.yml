@@ -9,20 +9,35 @@ agent:
     - name: main
       image: 'baalajimaestro/kernel_build:latest'
 
+auto_cancel:
+  queued:
+    when: "true"
+  
 blocks:
-  - name: "Build"
+  - name: "Build Kernel"
     task:
-      jobs:
-      - name: Build
+      secrets:
+        - name: api-keys
+
+      prologue:
         commands:
           - echo "Host *" > ~/.ssh/config && echo " StrictHostKeyChecking no" >> ~/.ssh/config
           - chmod 600 ~/.ssh/config
           - cache restore kernel-ccache
           - ccache -M 9G && ccache -s
-          - checkout
           - export LD_LIBRARY_PATH="/usr/local/lib:$LD_LIBRARY_PATH"
           - export PATH="/home/baalajimaestro/gcc/bin:/home/baalajimaestro/gcc32/bin:$PATH"
           - pip3 install --user GitPython aiogram requests
+          - checkout
+
+      jobs:
+      - name: Build
+        commands:
           - python3 build.py
-      secrets:
-        - name: api-keys
+
+      epilogue:
+        always:
+          commands:
+            - ccache -s
+            - cache delete kernel-ccache
+            - cache store kernel-ccache /home/baalajimaestro/.cache
