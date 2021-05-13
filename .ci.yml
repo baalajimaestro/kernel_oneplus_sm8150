@@ -18,7 +18,7 @@ blocks:
           - echo "Host *" > ~/.ssh/config && echo " StrictHostKeyChecking no" >> ~/.ssh/config
           - chmod 600 ~/.ssh/config
           - cache restore kernel-ccache
-          - ccache -M 9G
+          - ccache -M 9G && ccache -s
           - checkout
           - export LD_LIBRARY_PATH="/usr/local/lib:$LD_LIBRARY_PATH"
           - export PATH="/home/baalajimaestro/gcc/bin:/home/baalajimaestro/gcc32/bin:$PATH"

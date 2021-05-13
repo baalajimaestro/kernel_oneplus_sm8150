@@ -163,6 +163,7 @@ async def runner():
         print("Our Build Failed, but your traceback should help you!")
         import traceback
         traceback.print_exc()
+        execute(["ccache", "-s"])
         execute(["cache", "delete", "kernel-ccache"])
         execute(["cache", "store", "kernel-ccache", "/home/baalajimaestro/.cache"])
         await send_message(518221376, "Build Failed\!")
