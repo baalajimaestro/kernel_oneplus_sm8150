@@ -1,0 +1,49 @@
+version: v1.0
+name: Build Kernel
+
+agent:
+  machine:
+    type: e1-standard-8
+
+  containers:
+    - name: main
+      image: 'baalajimaestro/kernel_build:latest'
+
+auto_cancel:
+  queued:
+    when: "true"
+  
+blocks:
+  - name: "Build Kernel"
+    task:
+      secrets:
+        - name: api-keys
+
+      prologue:
+        commands:
+          - echo "Host *" > ~/.ssh/config && echo " StrictHostKeyChecking no" >> ~/.ssh/config
+          - chmod 600 ~/.ssh/config
+          - cache restore kernel-ccache
+          - ccache -M 9G && ccache -s
+          - export LD_LIBRARY_PATH="/usr/local/lib:$LD_LIBRARY_PATH"
+          - export PATH="/home/baalajimaestro/proton-clang/bin:$PATH"
+          - export KBUILD_BUILD_USER=baalajimaestro
+          - export KBUILD_BUILD_HOST=maestro-buildbot
+          - pip3 install --user GitPython aiogram requests
+          - checkout
+
+      jobs:
+      - name: Build
+        commands:
+          - python3 build.py
+
+      epilogue:
+        on_pass:
+          commands:
+            - bash publish.sh
+            
+        always:
+          commands:
+            - ccache -s
+            - cache delete kernel-ccache
+            - cache store kernel-ccache /home/baalajimaestro/.cache
