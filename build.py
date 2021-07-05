@@ -82,7 +82,7 @@ async def runner():
             "https://github.com/kdrag0n/proton-clang",
             "/home/baalajimaestro/proton-clang",
             branch="master",
-            kwargs="--depth=1"
+            depth=1
         )
         anykernel3 = Repo.clone_from(
             "https://github.com/baalajimaestro/AnyKernel3",
