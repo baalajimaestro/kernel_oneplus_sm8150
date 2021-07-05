@@ -23,7 +23,6 @@ blocks:
         commands:
           - echo "Host *" > ~/.ssh/config && echo " StrictHostKeyChecking no" >> ~/.ssh/config
           - chmod 600 ~/.ssh/config
-          - cache restore kernel-ccache
           - ccache -M 9G && ccache -s
           - export LD_LIBRARY_PATH="/usr/local/lib:$LD_LIBRARY_PATH"
           - export PATH="/home/baalajimaestro/proton-clang/bin:$PATH"
@@ -45,5 +44,3 @@ blocks:
         always:
           commands:
             - ccache -s
-            - cache delete kernel-ccache
-            - cache store kernel-ccache /home/baalajimaestro/.cache
